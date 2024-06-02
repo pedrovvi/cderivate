@@ -91,9 +91,7 @@ void lexer_read_token(Lexer* lexer) {
 }
 
 char lexer_next(Lexer* lexer) {
-  char current = lexer->source[lexer->cursor];
-  lexer->cursor++;
-
+  char current = lexer->source[lexer->cursor++];
   return current;
 }
 
