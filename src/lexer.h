@@ -7,6 +7,8 @@
 
 #include "token.h"
 
+const char SPACE[] = "                                                                                    ";
+
 typedef struct {
   // Errors
   int had_error;
@@ -80,11 +82,18 @@ void lexer_read_token(Lexer* lexer) {
 
     default:
       lexer->had_error = 1;
-      strcat(lexer->error_source, "~lexer: Erro, foi encontrado um caractere invalido: ");
+      char invalid[2];
+      invalid[0] = current;
+      invalid[1] = '\n';
+      invalid[2] = '\0';
 
-      const int len = strlen(lexer->error_source);
-      lexer->error_source[len] = current;
-      lexer->error_source[len + 1] = '\0';
+      char error_line[100];
+      sprintf(error_line, "%.*s^", lexer->start, SPACE);
+
+      strcat(lexer->error_source, "~lexer: Erro, foi encontrado um caractere invalido: ");
+      strcat(lexer->error_source, invalid);
+      strcat(lexer->error_source, lexer->source);
+      strcat(lexer->error_source, error_line);
 
       break;
   }

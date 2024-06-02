@@ -9,6 +9,7 @@
 typedef struct {
     int had_error;
     char error_source[300];
+    char* source;
 
     int cursor;
     Token* tokens;
@@ -18,7 +19,7 @@ typedef struct {
     int polynom_count;
 } Parser;
 
-Parser construct_parser(Token*, int);
+Parser construct_parser(Token*, int, char*);
 Polynom* parser_parse(Parser*);
 int parser_is_eof(Parser*);
 Token parser_eat(Parser*, TokenKind);
@@ -27,7 +28,7 @@ int parser_is_curr(Parser*, TokenKind);
 void parser_parse_polynom(Parser*);
 void parser_push_polynom(Parser*, Polynom*);
 
-Parser construct_parser(Token* tokens, int token_count) {
+Parser construct_parser(Token* tokens, int token_count, char* source) {
     Parser parser;
     parser.had_error = 0;
     parser.cursor = 0;
@@ -35,6 +36,7 @@ Parser construct_parser(Token* tokens, int token_count) {
     parser.token_count = token_count;
     parser.polynom_count = 0;
     parser.polynoms = NULL;
+    parser.source = source;
 
     return parser;
 }
@@ -56,8 +58,12 @@ Token parser_eat(Parser* parser, TokenKind kind) {
     
     if (token.kind != kind) {
         parser->had_error = 1;
-        sprintf(parser->error_source, "~parser: Erro, foi encontrado um token invalido: %s, esperado: %s", 
-                token_kind_name(token.kind), token_kind_name(kind));
+        char error_line[100];
+        sprintf(error_line, "%.*s^", token.start-1, SPACE);
+
+        sprintf(parser->error_source, "~parser: Erro, foi encontrado um token invalido: %s, esperado: %s\n%s%s", 
+                token_kind_lexeme(token.kind), token_kind_lexeme(kind), parser->source, error_line);
+        
         return token;
     }
     
@@ -110,6 +116,12 @@ void parser_parse_polynom(Parser* parser) {
 
         if (current.kind == EXPONENT_TOKEN) {
             parser_eat(parser, EXPONENT_TOKEN);
+            
+            if (parser_is_curr(parser, MINUS_TOKEN)) {
+              parser_eat(parser, MINUS_TOKEN);
+              polynom->exponent = -1;
+            }
+
             current = parser_eat(parser, NUMBER_TOKEN);
 
             if (parser->had_error) {
@@ -117,7 +129,7 @@ void parser_parse_polynom(Parser* parser) {
                 return;
             }
 
-            polynom->exponent = atoi(current.lexeme);
+            polynom->exponent *= atoi(current.lexeme);
             polynom->have_exponent = 1;
         }
 
