@@ -129,7 +129,7 @@ void calculate_tangent_line(Polynom* polynoms, Polynom* derivated_polynoms, int 
 
   y = get_y(polynoms, polynom_count, a);
   m = get_y(derivated_polynoms, polynom_count, a);
-  n = m * a + y;
+  n = -(m * a) + y;
 
   printf("=============================\n");
   
