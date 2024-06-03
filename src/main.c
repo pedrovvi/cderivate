@@ -11,6 +11,8 @@
 
 void interpret(Polynom **polynoms, int *polynom_count, char *source, int print_err)
 {
+  *polynoms = NULL;
+  
   Lexer lexer = construct_lexer(source);
   Token *tokens = lexer_lex(&lexer);
 
@@ -44,7 +46,6 @@ void interpret(Polynom **polynoms, int *polynom_count, char *source, int print_e
     return;
   }
 }
-
 void input_function(char *source, Polynom **polynoms, 
   Polynom **derivated_polynoms, int *polynom_count)
 {
@@ -53,23 +54,24 @@ void input_function(char *source, Polynom **polynoms,
   printf("-> 2x^3 + 3x^4 - 4x^5\n");
   printf("-> Utilize ^ para indicar o expoente.\n");
   printf("==================================\n");
-  printf("-> Digite sua funcao: \nf(x) = ");
-  fgets(source, STR_LEN, stdin);
 
   int is_valid = 0;
   
   do
   {
+    printf("-> Digite sua funcao: \nf(x) = ");
+    fgets(source, STR_LEN, stdin);
+
+    source[strcspn(source, "\n")] = 0;
+
     interpret(polynoms, polynom_count, source, 1);
     interpret(derivated_polynoms, polynom_count, source, 0);
 
-    if (polynoms == NULL || derivated_polynoms == NULL || polynom_count < 0)
+    if (*polynoms == NULL || *derivated_polynoms == NULL || *polynom_count <= 0)
     {
-      free(polynoms);
-      free(derivated_polynoms);
-      printf("-> Digite sua funcao novamente: \nf(x) = ");
-      getchar();
-      fgets(source, STR_LEN, stdin);
+      free(*polynoms);
+      free(*derivated_polynoms);
+      printf("-> Funcao invalida. Tente novamente.\n");
     }
     else
     {
@@ -77,6 +79,7 @@ void input_function(char *source, Polynom **polynoms,
     }
   } while (!is_valid);
 }
+
 
 void print_functions(Polynom *polynoms, Polynom *derivated_polynoms, int polynom_count)
 {

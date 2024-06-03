@@ -111,6 +111,7 @@ void lexer_read_token(Lexer *lexer)
     strcat(lexer->error_source, "~lexer: Erro, foi encontrado um caractere invalido: ");
     strcat(lexer->error_source, invalid);
     strcat(lexer->error_source, lexer->source);
+    strcat(lexer->error_source, "\n");
     strcat(lexer->error_source, error_line);
 
     break;
