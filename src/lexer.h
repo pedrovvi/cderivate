@@ -6,8 +6,7 @@
 #include <string.h>
 
 #include "token.h"
-
-const char SPACE[] = "                                                                                    ";
+#include "utils.h"
 
 typedef struct
 {
@@ -106,7 +105,7 @@ void lexer_read_token(Lexer *lexer)
     invalid[2] = '\0';
 
     char error_line[100];
-    sprintf(error_line, "%.*s^", lexer->start, SPACE);
+    sprintf(error_line, "%s^", repeatc(' ', lexer->start));
 
     strcat(lexer->error_source, "~lexer: Erro, foi encontrado um caractere invalido: ");
     strcat(lexer->error_source, invalid);

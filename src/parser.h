@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "token.h"
 #include "polynom.h"
+#include "utils.h"
 
 typedef struct
 {
@@ -66,7 +67,7 @@ Token parser_eat(Parser *parser, TokenKind kind)
   {
     parser->had_error = 1;
     char error_line[100];
-    sprintf(error_line, "%.*s^", token.start, SPACE);
+    sprintf(error_line, "%s^", repeatc(' ', token.start));
 
     sprintf(parser->error_source, "~parser: Erro, foi encontrado um token invalido: %s. Esperado: %s\n%s\n%s",
             token_kind_lexeme(token.kind), token_kind_lexeme(kind), parser->source, error_line);

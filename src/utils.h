@@ -10,6 +10,7 @@ double get_y(Polynom *, int, int);
 void derivate_polynom(Polynom *);
 void derivate_polynoms(Polynom *, int);
 void print_function(Polynom *, int, int);
+char* repeatc(char, int);
 
 void print_function(Polynom *polynoms, int polynom_count, int is_derivate)
 {
@@ -96,6 +97,16 @@ double get_y(Polynom *polynoms, int polynom_count, int x)
     }
   }
 
+  return result;
+}
+
+char* repeatc(char c, int n) {
+  char* result = (char*) malloc(sizeof(char) * n);
+  
+  for (int i = 0; i < n; i++)
+    result[i] = c;
+  result[n] = '\0';
+  
   return result;
 }
 
