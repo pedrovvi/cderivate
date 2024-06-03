@@ -13,22 +13,33 @@ void print_function(Polynom *, int, int);
 
 void print_function(Polynom *polynoms, int polynom_count, int is_derivate)
 {
-  char source[300] = "";
-  strcat(source, !is_derivate ? "f(x) =" : "f'(x) =");
+    char source[300] = "";
+    strcat(source, !is_derivate ? "f(x) = 0" : "f'(x) = 0");
 
-  for (int i = 0; i < polynom_count; i++)
-  {
-    Polynom polynom = polynoms[i];
+    int initialized = 0;
 
-    if (polynom.base == 0)
-      continue;
+    for (int i = 0; i < polynom_count; i++)
+    {
+        Polynom polynom = polynoms[i];
 
-    char current[100];
-    sprintf(current, "%s%s", polynom.base >= 0 && i > 0 ? " + " : " ", polynom_to_string(&polynom));
-    strcat(source, current);
-  }
+        if (polynom.base == 0)
+            continue;
 
-  printf(source);
+        if (!initialized) {
+            if (!is_derivate) {
+                strcpy(source, "f(x) =");
+            } else {
+                strcpy(source, "f'(x) =");
+            }
+            initialized = 1;
+        }
+
+        char current[100];
+        sprintf(current, "%s%s", polynom.base >= 0 && i > 0 ? " + " : " ", polynom_to_string(&polynom));
+        strcat(source, current);
+    }
+
+    printf("%s", source);
 }
 
 void derivate_polynom(Polynom *polynom)
