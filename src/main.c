@@ -96,7 +96,7 @@ void setup_menu()
   printf("-> (0) Sair\n");
   printf("-> (1) Trocar funcao\n");
   printf("-> (2) Calcular valor funcional no ponto a\n");
-  printf("-> (3) Calcular equacao da reta tangente no ponto P(a, f'(a))\n");
+  printf("-> (3) Calcular equacao da reta tangente no ponto P(a, f(a))\n");
   printf("=============================\n");
 }
 
